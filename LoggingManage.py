@@ -18,14 +18,12 @@ import re
 import platform
 from metaclasstool import Cached
 
-class LogginMange(object):
+class LogginMange(metaclass=Cached):
     """
     Logging模块管理
     """
-    _Version='1.0.2018.01.15'
+    _Version='1.0.02'
     #通过配置文件路径设置日志参数
-
-    __metaclass__ = Cached
 
     def __init__(self,logname,Logger):
         try:
