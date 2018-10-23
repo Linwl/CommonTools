@@ -30,24 +30,21 @@ class LogginMange(metaclass=Cached):
             sysstr = platform.system()
             if (sysstr == "Windows"):
                 work_path = os.getcwd() + '\Log'
-                logg_path = r'Log\%s' % logname
             elif (sysstr == "Linux"):
                 work_path = os.getcwd() + '/Log'
-                logg_path = r'Log/%s' % logname
             else:
                 print("Other System")
-
+            log_file = logname + '.log'
+            log_path = os.path.join(work_path, log_file)
             if not os.path.exists(work_path):
                 os.makedirs(work_path)
             else:
-                print(u'Log文件夹已存在')
+                print("The log folder already exists!")
             # 创建一个logger
             logger = logging.getLogger(Logger)
             logger.setLevel(logging.DEBUG)
             # 创建一个handler，用于写入日志文件
-
-            LOG_FILE =logg_path +'.log'
-            self.fh = TimedRotatingFileHandler(filename=LOG_FILE, when ='MIDNIGHT', interval=1,backupCount=30)
+            self.fh = TimedRotatingFileHandler(filename=log_path, when='MIDNIGHT', interval=1, backupCount=30)
             self.fh.suffix = "%Y-%m-%d.log"
             self.fh.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
             self.fh.setLevel(logging.DEBUG)
