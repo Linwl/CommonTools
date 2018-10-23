@@ -18,38 +18,33 @@ import re
 import platform
 from metaclasstool import Cached
 
-class LogginMange(object):
+class LogginMange(metaclass=Cached):
     """
     Logging模块管理
     """
     _Version='1.0.2018.01.15'
     #通过配置文件路径设置日志参数
 
-    __metaclass__ = Cached
-
     def __init__(self,logname,Logger):
         try:
             sysstr = platform.system()
             if (sysstr == "Windows"):
                 work_path = os.getcwd() + '\Log'
-                logg_path = r'Log\%s' % logname
             elif (sysstr == "Linux"):
                 work_path = os.getcwd() + '/Log'
-                logg_path = r'Log/%s' % logname
             else:
-                print("Other System")
-
+                print ("Other System")
+            log_file = logname + '.log'
+            log_path = os.path.join(work_path, log_file)
             if not os.path.exists(work_path):
                 os.makedirs(work_path)
             else:
-                print(u'Log文件夹已存在')
+                print ("The log folder already exists!")
             # 创建一个logger
             logger = logging.getLogger(Logger)
             logger.setLevel(logging.DEBUG)
             # 创建一个handler，用于写入日志文件
-
-            LOG_FILE =logg_path +'.log'
-            self.fh = TimedRotatingFileHandler(filename=LOG_FILE, when ='MIDNIGHT', interval=1,backupCount=30)
+            self.fh = TimedRotatingFileHandler(filename=log_path, when ='MIDNIGHT', interval=1,backupCount=30)
             self.fh.suffix = "%Y-%m-%d.log"
             self.fh.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
             self.fh.setLevel(logging.DEBUG)
@@ -65,6 +60,7 @@ class LogginMange(object):
             logger.addHandler(ch)
             self.logger = logger
         except Exception as e:
+            # print u"日志管理器启动异常:%s"%e
             raise e
 
     def remove_handler(self):
