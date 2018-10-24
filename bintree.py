@@ -171,30 +171,32 @@ class BinarySearchTree:
         :return:
         """
         del_tree = self.find(node)
-        if not del_tree.has_left_child() and not del_tree.has_right_child():
-            # 删除的节点为树叶,直接删除
-            if del_tree == del_tree.parent.left:
-                del_tree.parent.left = None
+        if del_tree:
+            if not del_tree.has_left_child() and not del_tree.has_right_child():
+                # 删除的节点为树叶,直接删除
+                if del_tree == del_tree.parent.left:
+                    del_tree.parent.left = None
+                else:
+                    del_tree.parent.right = None
+            elif del_tree.has_left_child() and del_tree.has_right_child():
+                # 有两个孩子
+                min_tree = self.find_minimun(del_tree.right)
+                # 再把右子树中最小值节点删除
+                self.del_node(min_tree.node)
+                del_tree.node = min_tree.node
             else:
-                del_tree.parent.right = None
-
-        elif del_tree.has_left_child() and del_tree.has_right_child():
-            # 有两个孩子
-            min_tree = self.find_minimun(del_tree.right)
-            min_tree.parent = del_tree.parent
-            min_tree.right = del_tree.right
-            min_tree.left = del_tree.left
+                # 只有一个子树
+                parent = del_tree.parent
+                if del_tree.has_left_child():
+                    # 拥有左子树
+                    subtree = del_tree.left
+                    self.__handle_child(del_tree, parent, subtree)
+                elif del_tree.has_right_child():
+                    #拥有右子树
+                    subtree = del_tree.right
+                    self.__handle_child(del_tree, parent, subtree)
         else:
-            # 只有一个子树
-            parent = del_tree.parent
-            if del_tree.has_left_child():
-                # 拥有左子树
-                subtree = del_tree.left
-                self.__handle_child(del_tree, parent, subtree)
-            elif del_tree.has_right_child():
-                #拥有右子树
-                subtree = del_tree.right
-                self.__handle_child(del_tree, parent, subtree)
+            return None
 
     def __handle_child(self, del_tree, parent, subtree):
         """
@@ -224,17 +226,34 @@ class BinarySearchTree:
         '''
         self.root = subtree
         subtree.parent = None
-        subtree = None
+
+    def printTree(self,tree=None):
+        """
+        打印二叉查找树
+        :return:
+        """
+        if not tree:
+            return
+        self.printTree(tree.left)
+        print(tree.node, end='->')
+        self.printTree(tree.right)
 
 
 if __name__ == '__main__':
-    tree = TreeNode(5)
+    tree = TreeNode(7)
     bintree=BinarySearchTree(tree)
-    bintree.insert_node(1)
     bintree.insert_node(3)
+    bintree.insert_node(2)
+    bintree.insert_node(5)
     bintree.insert_node(6)
-    bintree.insert_node(7)
-    print(bintree)
-    print(bintree.find_minimun().node)
-    print(bintree.find_maximun().node)
+    bintree.insert_node(4)
+    bintree.insert_node(9)
+    bintree.insert_node(8)
+    bintree.insert_node(10)
+    bintree.printTree(bintree.root)
+    # print(bintree.find_minimun().node)
+    # print(bintree.find_maximun().node)
+    bintree.del_node(3)
+    print()
+    bintree.printTree(bintree.root)
 
