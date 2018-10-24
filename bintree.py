@@ -9,6 +9,7 @@
 @time: 2018/10/23 9:53
 @function：二叉查找树实现算法
 """
+import queue
 
 class TreeNode:
     """
@@ -68,17 +69,34 @@ class BinarySearchTree:
 
     def find(self,find_node):
         '''
-        递归查找节点二叉树
+        非递归查找节点二叉树
         :param tree: 二叉树
         :param find_node: 查找节点
         :return:
         '''
+        bt = self.root
+        while bt:
+            cur_node = bt.node
+            if find_node < cur_node:
+                bt = bt.left
+            elif find_node > cur_node:
+                bt = bt.right
+            else:
+                return bt
+        return None
+
+    def recursion_find(self,find_node):
+        """
+        递归查找二叉树节点
+        :param find_node: 查找节点
+        :return:
+        """
         if not self.root:
             return None
         if self.root.node == find_node:
             return self.root
         elif find_node < self.root.node:
-            return self.__find_node(self.root.left,find_node)
+            return self.__find_node(self.root.left, find_node)
         elif find_node > self.root.node:
             return self.__find_node(self.root.right, find_node)
 
@@ -227,16 +245,81 @@ class BinarySearchTree:
         self.root = subtree
         subtree.parent = None
 
-    def printTree(self,tree=None):
+    def preorder_print_tree(self,tree):
         """
-        打印二叉查找树
+        前序打印二叉查找树
+        :return:
+        """
+        stack = [tree]
+        append = stack.append
+        print('前序遍历:')
+        while len(stack) > 0:
+            print(tree.node,end='->')
+            if tree.right:
+                append(tree.right)
+            if tree.left:
+                append(tree.left)
+            tree = stack.pop()
+
+    def inorder_print_tree(self,tree):
+        """
+        中序遍历打印二叉查找树
+        :param tree: 二叉查找树
+        :return:
+        """
+        stack =[]
+        append = stack.append
+        pos =tree
+        pop = stack.pop
+        print('中序遍历:')
+        while pos or len(stack)>0:
+            if pos:
+                append(pos)
+                pos = pos.left
+            else:
+                pos = pop()
+                print(pos.node,end='->')
+                pos = pos.right
+
+    def postorder_print_tree(self,tree):
+        """
+        后序遍历打印二叉查找树
+        :param tree: 二叉查找树
+        :return:
+        """
+        stack = [tree]
+        stack2 = []
+        append1 = stack.append
+        append2 = stack2.append
+        print('后序遍历:')
+        while len(stack)>0:
+            node = stack.pop()
+            append2(node)
+            if node.left:
+                append1(node.left)
+            if node.right:
+                append1(node.right)
+        while len(stack2)>0:
+            print(stack2.pop().node,end='->')
+
+    def layer_traverse_print_tree(self,tree):
+        """
+        层序打印二叉查找树
+        :param tree:
         :return:
         """
         if not tree:
-            return
-        self.printTree(tree.left)
-        print(tree.node, end='->')
-        self.printTree(tree.right)
+            return None
+        que = queue.Queue()  # 创建先进先出队列
+        que.put(tree)
+        print('层序遍历:')
+        while not que.empty():
+            head = que.get()  # 弹出第一个元素并打印
+            print(head.node,end='->')
+            if head.left:  # 若该节点存在左子节点,则加入队列（先push左节点）
+                que.put(head.left)
+            if head.right:  # 若该节点存在右子节点,则加入队列（再push右节点）
+                que.put(head.right)
 
 
 if __name__ == '__main__':
@@ -250,10 +333,15 @@ if __name__ == '__main__':
     bintree.insert_node(9)
     bintree.insert_node(8)
     bintree.insert_node(10)
-    bintree.printTree(bintree.root)
+    bintree.preorder_print_tree(bintree.root)
+    print()
+    bintree.inorder_print_tree(bintree.root)
+    print()
+    bintree.postorder_print_tree(bintree.root)
+    print()
+    bintree.layer_traverse_print_tree(bintree.root)
     # print(bintree.find_minimun().node)
     # print(bintree.find_maximun().node)
-    bintree.del_node(3)
-    print()
-    bintree.printTree(bintree.root)
+    # bintree.del_node(3)
+
 
