@@ -146,6 +146,46 @@ class SortTools:
             index += offset
             print()
 
+    @classmethod
+    def merge_sort(cls,array):
+        """
+        归并排序
+        :param array: 排序数组
+        :return:
+        """
+        if len(array) <= 1:
+            return array
+        middle  = int(len(array)/2)
+        left = cls.merge_sort(array[:middle])
+        right = cls.merge_sort(array[middle:])
+        return cls.merge(left,right)
+
+    @classmethod
+    def merge(cls,left,right):
+        """
+        归并两个有序序列
+        :param left:
+        :param right:
+        :return:
+        """
+        result = []
+        append =result.append
+        l,r=0,0
+        while l < len(left) and r <len(right):
+            if left[l] < right[r]:
+                append(left[l])
+                l= l+1
+            else:
+                append(left[r])
+                r=r+1
+        if l == len(left):
+            for i in right[r:]:
+                append(i)
+        else:
+            for i in left[l:]:
+                append(i)
+        return result
+
 if __name__ == '__main__':
     myList = [49, 38, 65, 97, 76, 13, 27,49,53,78]
     print("Quick Sort: ")
@@ -162,4 +202,8 @@ if __name__ == '__main__':
     print("Insertion Sort: ")
     myList = [49, 38, 65, 97, 76, 13, 27, 49, 53, 78]
     SortTools.insertion_sort(myList)
+    print(myList)
+    print("Merge Sort: ")
+    myList = [49, 38, 65, 97, 76, 13, 27, 49, 53, 78]
+    SortTools.merge_sort(myList)
     print(myList)
