@@ -102,6 +102,24 @@ class SortTools:
         heap_L[i] = temp
 
     @staticmethod
+    def insertion_sort(array):
+        """
+        直接插入排序
+        :param array:
+        :return:
+        """
+        lenth = len(array)
+        for i in range(1,lenth):
+            temp = array[i]
+            j= i-1
+            # temp与前一个元素比较，若temp较小则前一元素后移，j自减，继续比较
+            while j >= 0 and temp < array[j]:
+                array[j + 1] = array[j]
+                j = j - 1
+            # temp所指向元素的J向前一位位置
+            array[j + 1] = temp
+
+    @staticmethod
     def print_tree(array):
         '''
         深度 前空格 元素间空格
@@ -133,8 +151,15 @@ if __name__ == '__main__':
     print("Quick Sort: ")
     print(SortTools.quick_sort(myList))
     print("Selection Sort: ")
+    myList = [49, 38, 65, 97, 76, 13, 27, 49, 53, 78]
     SortTools.selection_sort(myList)
     print(myList)
+    myList = [49, 38, 65, 97, 76, 13, 27, 49, 53, 78]
     print("Heap Sort: ")
+    myList = [49, 38, 65, 97, 76, 13, 27, 49, 53, 78]
     print(SortTools.heap_sort(myList))
-    SortTools.print_tree(myList)
+    # SortTools.print_tree(myList)
+    print("Insertion Sort: ")
+    myList = [49, 38, 65, 97, 76, 13, 27, 49, 53, 78]
+    SortTools.insertion_sort(myList)
+    print(myList)
