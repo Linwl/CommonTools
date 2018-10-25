@@ -322,6 +322,8 @@ class BinarySearchTree:
                 que.put(head.right)
 
 
+
+
 if __name__ == '__main__':
     tree = TreeNode(7)
     bintree=BinarySearchTree(tree)
