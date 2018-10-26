@@ -11,8 +11,10 @@
 """
 import math
 from collections import deque
+from heapq import merge
 
 class SortTools:
+
 
     @classmethod
     def quick_sort(cls,array):
@@ -146,6 +148,7 @@ class SortTools:
             index += offset
             print()
 
+
     @classmethod
     def merge_sort(cls,array):
         """
@@ -158,7 +161,7 @@ class SortTools:
         middle  = int(len(array)/2)
         left = cls.merge_sort(array[:middle])
         right = cls.merge_sort(array[middle:])
-        return cls.merge(left,right)
+        return list(merge(left,right))
 
     @classmethod
     def merge(cls,left,right):
@@ -171,19 +174,15 @@ class SortTools:
         result = []
         append =result.append
         l,r=0,0
-        while l < len(left) and r <len(right):
+        while l < len(left) and len(right)> r:
             if left[l] < right[r]:
                 append(left[l])
-                l= l+1
+                l +=1
             else:
-                append(left[r])
-                r=r+1
-        if l == len(left):
-            for i in right[r:]:
-                append(i)
-        else:
-            for i in left[l:]:
-                append(i)
+                append(right[r])
+                r +=1
+        result += list(left[l:])
+        result += list(right[r:])
         return result
 
 if __name__ == '__main__':
@@ -205,5 +204,4 @@ if __name__ == '__main__':
     print(myList)
     print("Merge Sort: ")
     myList = [49, 38, 65, 97, 76, 13, 27, 49, 53, 78]
-    SortTools.merge_sort(myList)
-    print(myList)
+    print(SortTools.merge_sort(myList))
