@@ -24,7 +24,7 @@ def binary_search(arry,item):
     high = len(arry) -1
     arry = SortTools.quick_sort(arry)
     while low < high:
-        middle = int((low +high)/2)
+        middle = (low +high)// 2
         if arry[middle] == item:
             return '待查元素{0}在列表中下标为：{1}'.format(item, middle)
         elif arry[middle] > item:
@@ -35,4 +35,4 @@ def binary_search(arry,item):
 
 if __name__ == '__main__':
     arry = [4,5,9,3,1,7]
-    print(binary_search(arry,15))
+    print(binary_search(arry,4))
