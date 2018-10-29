@@ -11,6 +11,7 @@
 """
 from performanceTools import cal_time
 from sortTools import SortTools
+from  collections import deque
 
 @cal_time
 def binary_search(arry,item):
@@ -59,7 +60,127 @@ def interpolation__search(arry,item):
             low = mid + 1
     return '待查找元素%s不存在指定列表中'%item
 
+class Graph(object):
+    """
+    图类
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.node_neighbors = {}
+        self._queue = deque()
+        self.orders = []
+
+    def add_nodes(self, nodelist):
+        """
+        增加节点
+        :param nodelist:
+        :return:
+        """
+        if isinstance(nodelist,list):
+            if(len(nodelist) >0):
+                for node in nodelist:
+                    self.__add_node(node)
+            else:
+                raise ValueError('nodelist is empty!')
+        else:
+            raise ValueError('nodelist is not list!')
+
+    def __add_node(self, node):
+        if not node in self.nodes():
+            self.node_neighbors[node] = []
+
+    def add_edge(self, edge):
+        """
+        增加图的边坐标
+        :param edge:
+        :return:
+        """
+        u, v = edge
+        if (v not in self.node_neighbors[u]) and (u not in self.node_neighbors[v]):
+            self.node_neighbors[u].append(v)
+            if (u != v):
+                self.node_neighbors[v].append(u)
+
+    def nodes(self):
+        return self.node_neighbors.keys()
+
+    def bfs(self,root):
+        """
+        广度优先搜索
+        :param root:
+        :return:
+        """
+        self._init_fs(root)
+        while len(self._queue):
+            person = self._queue.popleft()
+            if (not person in self.visited) and (person in self.node_neighbors.keys()):
+                self._queue += self.node_neighbors[person]
+                self.v_append(person)
+                self.or_append(person)
+
+    def dfs(self,root):
+        """
+        深度优先搜索
+        :param root:
+        :return:
+        """
+        self._init_fs(root)
+        while len(self._queue):
+            person = self._queue.popleft()
+            if (not person in self.visited) and (person in self.node_neighbors.keys()):
+                temp = self.node_neighbors[person]
+                temp.reverse()
+                for index in temp:
+                    self._queue.appendleft(index)
+                self.v_append(person)
+                self.or_append(person)
+
+    def _init_fs(self,root):
+        if root:
+            self.visited = []
+            self.or_append = self.orders.append
+            self.v_append = self.visited.append
+            if root in self.node_neighbors.keys():
+                self._queue.append(root)
+            else:
+                self.or_append(-1)
+                return
+        else:
+            raise ValueError('root is None')
+
+
+
+    def clear(self):
+        self.orders = []
+
+    def node_print(self):
+        for index in self.orders:
+            print(index, end='  ')
+
+
 if __name__ == '__main__':
-    arry = [4,5,9,3,1,7]
-    print(binary_search(arry,4))
-    print(interpolation__search(arry, 4))
+    # arry = [4,5,9,3,1,7]
+    # print(binary_search(arry,4))
+    # print(interpolation__search(arry, 4))
+    g = Graph()
+    g.add_nodes([i for i in range(1,9)])
+    g.add_edge((1, 2))
+    g.add_edge((1, 3))
+    g.add_edge((2, 4))
+    g.add_edge((2, 5))
+    g.add_edge((3, 6))
+    g.add_edge((3, 7))
+    g.add_edge((6, 7))
+    g.add_edge((4, 8))
+    g.add_edge((5, 8))
+    print("nodes:", g.nodes())
+    g.bfs(1)
+    print('BFS:')
+    print('  ', end='  ')
+    g.node_print()
+    g.clear()
+    print()
+    print('DFS:')
+    print('  ', end='  ')
+    g.dfs(1)
+    g.node_print()
