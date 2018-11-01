@@ -86,7 +86,7 @@ if __name__ == '__main__':
     i =0
     weight = 0.6
     for d in source:
-        if d.get('MeterAddr') == '101735008172':
+        if d.get('MeterAddr') == '101735008295':
             d['DataTime'] = datetime.strptime(d.get('DataTime'),'%Y-%m-%d %H:%M:%S')
             append(d)
             i+=1
