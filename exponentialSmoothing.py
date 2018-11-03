@@ -47,6 +47,7 @@ class ExponentialSmoothing:
         if len(self._datas) <3:
             raise ValueError('预测数组长度不足,少于3个!')
         self._datas.sort(key=lambda x: x["DataTime"])
+
         initial = (self._datas[0].get('Value')+self._datas[1].get('Value')+self._datas[2].get('Value'))/3
         predicteds = dict()
         is_first =True
@@ -69,15 +70,6 @@ class ExponentialSmoothing:
             second_predicteds.setdefault(k,second_predicted)
         return predicteds,second_predicteds
 
-def data_cleaning(datas):
-    if len(datas)>0:
-        for i in range(len(datas)-1,0,-1):
-            if datas[i].get('Value') >datas[i-1].get('Value'):
-                return datas[i:]
-        return datas
-    else:
-        raise ValueError('数组长度为0!')
-
 
 if __name__ == '__main__':
     source = read_excl()
@@ -86,12 +78,15 @@ if __name__ == '__main__':
     i =0
     weight = 0.6
     for d in source:
-        if d.get('MeterAddr') == '101735008295':
+        if d.get('MeterAddr') == '101735008529':
             d['DataTime'] = datetime.strptime(d.get('DataTime'),'%Y-%m-%d %H:%M:%S')
             append(d)
             i+=1
     print('原始数据:',datas)
-    pre_datas = data_cleaning(datas[0:7])
+    if len(datas) >7 :
+        pre_datas = datas[0:7]
+    else:
+        pre_datas = datas
     ex = ExponentialSmoothing(weight=weight,datas=pre_datas)
     predicteds, second_predicteds = ex.start()
     for data in pre_datas:
