@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-@company:广东浩迪创新科技有限公司
+@company:
 @version: ??
 @author: linwl
 @file: configmange.py

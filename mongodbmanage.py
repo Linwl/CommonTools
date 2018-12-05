@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-@company:广东浩迪创新科技有限公司
+@company:
 @version: ??
 @author: linwl
 @file: mongodbmanage.py
@@ -15,7 +15,7 @@ from pymongo import MongoClient
 
 class MongodbManage:
     # 模块版本号
-    _Version = "1.0.2018.07.31"
+    _Version = "1.0.02"
 
     _instance_lock = threading.Lock()
 
