@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-@company:广东浩迪创新科技有限公司
+@company:
 @version: ??
 @author: linwl
 @file: desTools.py
@@ -15,8 +15,8 @@ import binascii
 import random
 import string
 
-key = "G3z(%&mj"
-token_key = 'eNBw$)#z'
+key = "G3z(thhhh"
+token_key = 'eNBrpdlf'
 
 class DesTools(object):
 
