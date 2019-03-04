@@ -2,7 +2,7 @@
 # coding=utf-8
 
 """
-@company:
+@company:广东浩迪创新科技有限公司
 @version: ??
 @author: linwl
 @file: httptools.py
@@ -11,9 +11,10 @@
 """
 
 import requests
-from desTools import DesTools
+from .desTools import DesTools
 import datetime
 import time
+from aiohttp import ClientSession,ClientTimeout
 
 class HttpRequestTools(object):
     __access_token = 'epcloudtokenkey20150508'
@@ -73,3 +74,47 @@ class HttpRequestTools(object):
         authorizationText = 'HDACS access_token={0};request_time={1}'.format(cls.__access_token,utctime)
         res = DesTools.encrypt(authorizationText)
         return res
+
+    @staticmethod
+    async def asynchttp_get(url,params =None,headers =None,timeout=7,add_auth = True):
+        '''
+        异步get请求
+        :param url:
+        :param params:
+        :param headers:
+        :param timeout:
+        :param add_auth:
+        :return:
+        '''
+        headers = HttpRequestTools.__addheaders(add_auth, headers)
+        client_timeout = ClientTimeout(total=timeout)
+        async with ClientSession(headers=headers,timeout=client_timeout) as session:
+            html = await HttpRequestTools.fetch_get(session,url,params)
+            return html
+
+    @classmethod
+    async def fetch_get(cls,session, url,params):
+        async with session.get(url,params=params) as response:
+            return await response.text()
+
+    @staticmethod
+    async def asynchttp_post(url, data=None, headers=None, timeout=7, add_auth=True):
+        """
+        异步Post请求
+        :param url:
+        :param data:
+        :param headers:
+        :param timeout:
+        :param add_auth:
+        :return:
+        """
+        headers = HttpRequestTools.__addheaders(add_auth, headers)
+        client_timeout = ClientTimeout(total=timeout)
+        async with ClientSession(headers=headers, timeout=client_timeout) as session:
+            html = await HttpRequestTools.fetch_post(session, url, data)
+            return html
+
+    @classmethod
+    async def fetch_post(cls, session, url, data):
+        async with session.post(url, data=data) as response:
+            return await response.text()
